@@ -1,0 +1,14 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+#*.py[cod]
+#*$py.class
+
+# pycharm
+.idea/
+
+# virtual env
+python36_Virtual
+
+# application specific
+usersettings.py
+screenshots/
