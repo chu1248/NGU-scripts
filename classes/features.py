@@ -1632,16 +1632,24 @@ class Misc:
         """
         try:  # The sliced argument was meant for low values with get_pow/bars/cap
             # But also serves for low idle caps
-            if   resource == 1: res = Inputs.ocr(*coords.OCR_ENERGY, sliced=True)
-            elif resource == 2: res = Inputs.ocr(*coords.OCR_MAGIC , sliced=True)
-            elif resource == 3: res = Inputs.ocr(*coords.OCR_R3    , sliced=True)
+            if   resource == 1: text = Inputs.ocr(*coords.OCR_ENERGY, sliced=True)
+            elif resource == 2: text = Inputs.ocr(*coords.OCR_MAGIC , sliced=True)
+            elif resource == 3: text = Inputs.ocr(*coords.OCR_R3    , sliced=True)
             else : raise RuntimeError("Invalid resource")
-            
-            res = Inputs.get_numbers(res)[0]
+
+            # for handling "M: 0/"
+            if text.find(":") >= 0:
+                text = text.split(":")[1]
+            if text.find("/") >= 0:
+                text = text.split("/")[0]
+
+            text = text.replace(",", "")  # remove comma separator
+
+            res = Inputs.get_numbers(text)[0]
             return res
             
         except IndexError:
-            print("couldn't get idle cap")
+            print(f"couldn't get idle cap for resource={resource}")
             return 0
 
     @staticmethod
