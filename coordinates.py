@@ -34,7 +34,7 @@ NGU_BAR_GRAY = "FAFAFA"
 #     PLAYER_HEAL_THRESHOLDX # SAME
 # ]
 
-INPUT_MAX = 9e18
+INPUT_MAX = "999999999999999999"
 
 # Adventure Offsets
 RIGHT_ARROW = Pixel(930, 220)
@@ -85,14 +85,20 @@ ABILITY_HYPER_REGEN = Pixel(426, 186)
 ABILITY_BEAST_MODE = Pixel(531, 186)
 ABILITY_ROW3_READY_COLOR = "C39494"
 
-ABILITY_PRIORITY = {1: 6,  # Strong
-                    2: 8,  # Parry
-                    3: 9,  # Piercing
-                    4: 10,  # Ultimate
-                    5: 4,  # Block
-                    6: 5,  # Defensive
-                    9: 12 # Charge
-                    }  # Paralyze
+# larger number means higher priority
+# use cool down as basis
+ABILITY_PRIORITY = {1: 4,  # Strong
+                    2: 15,  # Parry
+                    3: 8 + 8,  # Piercing
+                    4: 15 + 700,  # Ultimate
+                    5: 10 + 600,  # Block
+                    6: 45,  # Defensive
+                    7: 15 - 15,  # Heal, special handling involved
+                    8: 45 + 900,  # offensive buff
+                    9: 30 + 800,  # Charge
+                    10: 45 + 900,  # ultimate buff
+                    11: 15 + 1000,  # Paralyze
+                    }
 
 #titan dictionaries
 TITAN_PT = {"GRB": {"p": 1.3e3, "t": 1.3e3}, "GCT": {"p": 5e3, "t": 4e3},
@@ -300,9 +306,9 @@ OCR_TOTAL_EXP = OCRBox(510, 365, 928, 400) #From MISC Info
 OCR_NGU_E = OCRBox(820, 190, 940, 219)
 
 #STATS OCR
-OCR_ENERGY = OCRBox(12, 28, 165, 50)
-OCR_MAGIC = OCRBox(12, 70, 165, 90)
-OCR_R3 = OCRBox(12, 110, 162, 133)
+OCR_ENERGY = OCRBox(13, 35, 165, 50)
+OCR_MAGIC = OCRBox(13, 75, 165, 90)
+OCR_R3 = OCRBox(13, 110, 162, 133)
 
 #OCR CHALLENGES
 OCR_CHALLENGE_NAME = OCRBox(465, 87, 750, 104)
