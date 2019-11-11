@@ -273,10 +273,8 @@ class Adventure:
             if time.time() > start + 5:
                 print("Couldn't detect enemy in kill_enemy()")
                 return
-        queue = deque(Adventure.get_ability_queue())
         while not Inputs.check_pixel_color(*coords.IS_DEAD):
-            if not queue:
-                queue = deque(Adventure.get_ability_queue())
+            queue = deque(Adventure.get_ability_queue())
             ability = queue.popleft()
             if ability <= 4:
                 x = coords.ABILITY_ROW1X + ability * coords.ABILITY_OFFSETX
@@ -453,11 +451,11 @@ class Adventure:
                 queue.append(7)
         
         # check if offensive buff and ultimate buff are both ready
-        buffs = [8, 10]
-        if 14 in ready:
-            queue.append(14)
-        elif all(i in ready for i in buffs) and not Adventure.mega_buff_unlocked:
-            queue.extend(buffs)
+#        buffs = [8, 10]
+#        if 14 in ready:
+#            queue.append(14)
+#        elif all(i in ready for i in buffs) and not Adventure.mega_buff_unlocked:
+#            queue.extend(buffs)
         
         d = coords.ABILITY_PRIORITY
         # Sort the abilities by the set priority
