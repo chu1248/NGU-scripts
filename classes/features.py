@@ -772,7 +772,19 @@ class BloodMagic:
         Navigation.menu("bloodmagic")
         for i in range(target):
             Inputs.click(*coords.BM[i])
-    
+
+    @staticmethod
+    def blood_magic_reverse(target):
+        """Assign magic to BM.
+
+        Keyword arguments
+        target -- Will cap all rituals till the target ritual
+                  Usually run as blood_magic(8)
+        """
+        Navigation.menu("bloodmagic")
+        for i in range(target, -1, -1):
+            Inputs.click(*coords.BM[i])
+
     @staticmethod
     @deprecated(version='0.1', reason="speedrun_bloodpill is deprecated, use iron_pill() instead")
     def speedrun_bloodpill():
