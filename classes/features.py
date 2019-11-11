@@ -1447,7 +1447,8 @@ class Misc:
         Inputs.send_string("r")
         Inputs.send_string("t")
         Inputs.send_string("f")
-    
+        time.sleep(0.2)  # allow time to reflect the idle resources
+
     @staticmethod
     def reclaim_res(energy=False, magic=False, r3=False):
         """Reclaim resources of choosing from all features.
