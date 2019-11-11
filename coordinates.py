@@ -326,7 +326,7 @@ DIG_CAP = {1: Pixel(550, 185), 2: Pixel(865, 185), 3: Pixel(550, 375), 4: Pixel(
 
 DIG_LEVEL = [Pixel(535, 235), Pixel(850, 235), Pixel(535, 420), Pixel(850, 420)]
 
-DIG_DEACTIVATE_ALL = Pixel(850, 110)
+DIG_DEACTIVATE_ALL = Pixel(906, 110)
 
 #QUESTING OFFSETS
 
