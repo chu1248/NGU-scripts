@@ -1444,6 +1444,7 @@ class Misc:
     @staticmethod
     def reclaim_all():
         """Reclaim all resources from all features."""
+        Navigation.menu("fight")  # avoid adventure which absorbs the keys as moves
         Inputs.send_string("r")
         Inputs.send_string("t")
         Inputs.send_string("f")
