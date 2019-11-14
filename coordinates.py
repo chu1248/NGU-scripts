@@ -90,7 +90,7 @@ ABILITY_ROW3_READY_COLOR = "C39494"
 ABILITY_PRIORITY = {1: 4,  # Strong
                     2: 15,  # Parry
                     3: 8 + 8,  # Piercing
-                    4: 15 + 700,  # Ultimate
+                    4: 15 + 700,  # Ultimate, higher priority to follow the buffs
                     5: 10 + 600,  # Block
                     6: 45,  # Defensive
                     7: 15 - 15,  # Heal, special handling involved
@@ -98,6 +98,7 @@ ABILITY_PRIORITY = {1: 4,  # Strong
                     9: 30 + 800,  # Charge
                     10: 45 + 900,  # ultimate buff
                     11: 15 + 1000,  # Paralyze
+                    12: 35,  # Hyper Regen
                     }
 
 #titan dictionaries
