@@ -1474,6 +1474,7 @@ class Misc:
         magic  -- If True, reclaim magic.
         r3     -- If True, reclaim resource 3.
         """
+        Navigation.menu("fight")  # avoid adventure which absorbs the keys as moves
         if energy:
             Inputs.send_string("r")
         if magic:
