@@ -5,6 +5,8 @@ from classes.features   import (AdvancedTraining, Adventure, Augmentation, Fight
                                 Questing, Yggdrasil)
 from classes.helper     import Helper
 
+debug = True
+
 # Set these to your own loadouts
 
 blood_magic_highest_affordable_level = 6  # 0 based
@@ -51,7 +53,15 @@ while True:
         if curState != stateName:
             print(stateName)
             curState = stateName
+            if debug:
+                e_idle = Misc.get_idle_cap(1)
+                m_idle = Misc.get_idle_cap(2)
+                print(f"E: {e_idle} \t M: {m_idle}")
             Misc.reclaim_all()
+            if debug:
+                e_idle = Misc.get_idle_cap(1)
+                m_idle = Misc.get_idle_cap(2)
+                print(f"E: {e_idle} \t M: {m_idle}")
         TimeMachine.time_machine(e=Misc.get_idle_cap(1), m=Misc.get_idle_cap(2))  # need to keep adding as filling up
         FightBoss.nuke()
         Adventure.snipe(zone=zone_after_rebirth, duration=1, once=True, bosses=True, manual=False)  # auto to be safe
@@ -63,7 +73,16 @@ while True:
         if curState != stateName:
             print(stateName)
             curState = stateName
+            if debug:
+                print(f"E: {Misc.get_idle_cap(1)} \t M: {Misc.get_idle_cap(2)}")
+                TimeMachine.time_machine(e=Misc.get_idle_cap(1),
+                                         m=Misc.get_idle_cap(2))  # force away the resource
             Misc.reclaim_all()
+            if debug:
+                while Misc.get_idle_cap(1) == 0 or Misc.get_idle_cap(2) == 0:
+                    print(f"E: {Misc.get_idle_cap(1)} \t M: {Misc.get_idle_cap(2)}")
+                    Misc.reclaim_all()
+                print(f"E: {Misc.get_idle_cap(1)} \t M: {Misc.get_idle_cap(2)}")
             # Focus on adv training power and toughness
             AdvancedTraining.advanced_training(value=(Misc.get_idle_cap(1) // 2), ability=1)  # Toughness
             AdvancedTraining.advanced_training(value=Misc.get_idle_cap(1), ability=2)  # Power
@@ -78,7 +97,16 @@ while True:
         if curState != stateName:
             print(stateName)
             curState = stateName
+            if debug:
+                print(f"E: {Misc.get_idle_cap(1)} \t M: {Misc.get_idle_cap(2)}")
+                TimeMachine.time_machine(e=Misc.get_idle_cap(1),
+                                         m=Misc.get_idle_cap(2))  # force away the resource
             Misc.reclaim_all()
+            if debug:
+                while Misc.get_idle_cap(1) == 0 or Misc.get_idle_cap(2) == 0:
+                    print(f"E: {Misc.get_idle_cap(1)} \t M: {Misc.get_idle_cap(2)}")
+                    Misc.reclaim_all()
+                print(f"E: {Misc.get_idle_cap(1)} \t M: {Misc.get_idle_cap(2)}")
             # Augmentation
             Augmentation.augments({"CI": 0.7, "ML": 0.3}, Misc.get_idle_cap(1))
             # Blood magic for gold
@@ -93,7 +121,16 @@ while True:
         if curState != stateName:
             print(stateName)
             curState = stateName
+            if debug:
+                print(f"E: {Misc.get_idle_cap(1)} \t M: {Misc.get_idle_cap(2)}")
+                TimeMachine.time_machine(e=Misc.get_idle_cap(1),
+                                         m=Misc.get_idle_cap(2))  # force away the resource
             Misc.reclaim_all()
+            if debug:
+                while Misc.get_idle_cap(1) == 0 or Misc.get_idle_cap(2) == 0:
+                    print(f"E: {Misc.get_idle_cap(1)} \t M: {Misc.get_idle_cap(2)}")
+                    Misc.reclaim_all()
+                print(f"E: {Misc.get_idle_cap(1)} \t M: {Misc.get_idle_cap(2)}")
             # Adv training for wandoos
             AdvancedTraining.advanced_training(value=(Misc.get_idle_cap(1) // 2), ability=4)  # wandoos energy
             AdvancedTraining.advanced_training(value=Misc.get_idle_cap(1), ability=5)  # wandoos magic
@@ -108,7 +145,16 @@ while True:
         if curState != stateName:
             print(stateName)
             curState = stateName
+            if debug:
+                print(f"E: {Misc.get_idle_cap(1)} \t M: {Misc.get_idle_cap(2)}")
+                TimeMachine.time_machine(e=Misc.get_idle_cap(1),
+                                         m=Misc.get_idle_cap(2))  # force away the resource
             Misc.reclaim_all()
+            if debug:
+                while Misc.get_idle_cap(1) == 0 or Misc.get_idle_cap(2) == 0:
+                    print(f"E: {Misc.get_idle_cap(1)} \t M: {Misc.get_idle_cap(2)}")
+                    Misc.reclaim_all()
+                print(f"E: {Misc.get_idle_cap(1)} \t M: {Misc.get_idle_cap(2)}")
             # Wandoos
             Wandoos.wandoos(energy=True, magic=True)
             TimeMachine.time_machine(e=Misc.get_idle_cap(1),
@@ -143,9 +189,18 @@ while True:
         if curState != stateName:
             print(stateName)
             curState = stateName
+            if debug:
+                print(f"E: {Misc.get_idle_cap(1)} \t M: {Misc.get_idle_cap(2)}")
+                TimeMachine.time_machine(e=Misc.get_idle_cap(1),
+                                         m=Misc.get_idle_cap(2))  # force away the resource
             Misc.reclaim_all()
-            NGU.assign_ngu(value=Misc.get_idle_cap(1), targets=range(1, 10), magic=False)
-            NGU.assign_ngu(value=Misc.get_idle_cap(2), targets=range(1, 8), magic=True)
+            if debug:
+                while Misc.get_idle_cap(1) == 0 or Misc.get_idle_cap(2) == 0:
+                    print(f"E: {Misc.get_idle_cap(1)} \t M: {Misc.get_idle_cap(2)}")
+                    Misc.reclaim_all()
+                print(f"E: {Misc.get_idle_cap(1)} \t M: {Misc.get_idle_cap(2)}")
+            NGU.assign_ngu(value=Misc.get_idle_cap(1), targets=(list(range(1, 10)) + [5] * 9), magic=False)
+            NGU.assign_ngu(value=Misc.get_idle_cap(2), targets=(list(range(1, 8)) + [1, 2, 5]), magic=True)
             GoldDiggers.deactivate_all_diggers()
             GoldDiggers.gold_diggers([5, 6], deactivate=True)  # Energy NGU, Magic NGU
         #Adventure.snipe(zone=zone_after_training, duration=1, once=True, bosses=True, manual=True)

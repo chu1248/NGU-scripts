@@ -953,9 +953,14 @@ class NGU:
         targets -- Array of NGU's to use (1-9).
         magic -- Set to true if these are magic NGUs
         """
-        if len(targets) > 9:
-            raise RuntimeError("Passing too many NGU's to assign_ngu," +
-                               " allowed: 9, sent: " + str(len(targets)))
+        if max(list(targets)) > (7 if magic else 9):
+            raise RuntimeError("Passing invalid choice to assign_ngu," +
+                               " allowed options: 1.." + str(7 if magic else 9) +
+                               ", sent: max: " + str(max(list(targets))))
+        if min(list(targets)) < 1:
+            raise RuntimeError("Passing invalid choice to assign_ngu," +
+                               " allowed options: 1.." + str(7 if magic else 9) +
+                               ", sent: min: " + str(min(list(targets))))
         if magic: Navigation.ngu_magic()
         else: Navigation.menu("ngu")
         
