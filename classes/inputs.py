@@ -108,7 +108,7 @@ class Inputs:
         time.sleep(0.05)
     
     @staticmethod
-    def send_string(string :str) -> None:
+    def send_string(string: str, send_up_as_well: bool =False) -> None:
         """Send one or multiple characters to the Window."""
         # Ensure it's a string by converting it to a string
         for c in str(string):
@@ -121,7 +121,9 @@ class Inputs:
             vkc = win32api.VkKeyScan(c)  # Get virtual key code for character c
             # Only one keyup or keydown event needs to be sent
             win32gui.PostMessage(Window.id, wcon.WM_KEYDOWN, vkc, 0)
-    
+            if send_up_as_well:
+                win32gui.PostMessage(Window.id, wcon.WM_KEYUP, vkc, 0)
+
     @staticmethod
     def get_bitmap() -> image:
         """Get and return a bitmap of the Window."""

@@ -1460,10 +1460,10 @@ class Misc:
     def reclaim_all():
         """Reclaim all resources from all features."""
         Navigation.menu("fight")  # avoid adventure which absorbs the keys as moves
-        Inputs.send_string("r")
-        Inputs.send_string("t")
-        Inputs.send_string("f")
-        # time.sleep(0.2)  # allow time to reflect the idle resources
+        Inputs.send_string("r", send_up_as_well=True)
+        Inputs.send_string("t", send_up_as_well=True)
+        Inputs.send_string("f", send_up_as_well=True)
+        time.sleep(userset.LONG_SLEEP)  # allow time to reflect the idle resources
 
     @staticmethod
     def reclaim_res(energy=False, magic=False, r3=False):
@@ -1476,12 +1476,13 @@ class Misc:
         """
         Navigation.menu("fight")  # avoid adventure which absorbs the keys as moves
         if energy:
-            Inputs.send_string("r")
+            Inputs.send_string("r", send_up_as_well=True)
         if magic:
-            Inputs.send_string("t")
+            Inputs.send_string("t", send_up_as_well=True)
         if r3:
-            Inputs.send_string("f")
-    
+            Inputs.send_string("f", send_up_as_well=True)
+        time.sleep(userset.LONG_SLEEP)  # allow time to reflect the idle resources
+
     @staticmethod
     def reclaim_bm():
         """Remove all magic from BM."""
