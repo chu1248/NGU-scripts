@@ -201,7 +201,11 @@ class Adventure:
         end = time.time() + duration * 60
         while time.time() < end:
             if fast:
-                Inputs.click(*coords.ABILITY_REGULAR_ATTACK, fast=True)
+                if (Inputs.check_pixel_color(*coords.IS_ENEMY_ALIVE) and
+                        Inputs.check_pixel_color(*coords.COLOR_REGULAR_ATTACK_READY)):
+                    Inputs.click(*coords.ABILITY_REGULAR_ATTACK, fast=True)
+                else:
+                    time.sleep(0.01)
                 continue
 
             Inputs.click(625, 500)  # click somewhere to move tooltip
