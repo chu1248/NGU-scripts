@@ -5,35 +5,20 @@ from classes.features   import (AdvancedTraining, Adventure, Augmentation, Fight
                                 Questing, Yggdrasil)
 from classes.helper     import Helper
 
-debug = True
+debug = False
 
 # Set these to your own loadouts
+ngu_loadout = 1
+gold_loadout = 2
+pit_loadout = 3
 
 blood_magic_highest_affordable_level = 6  # 0 based
+
 
 Helper.init()
 Helper.requirements()
 
 curState = ""
-
-while False:
-    rt = Rebirth.get_rebirth_time()
-
-    Yggdrasil.ygg()
-
-    Adventure.snipe(zone=16, duration=20, once=True, bosses=True, manual=True)
-    Adventure.itopod_snipe(60)
-    Inventory.boost_cube()
-
-    spells = BloodMagic.check_spells_ready()
-    if spells:  # check if any spells are off CD
-        Misc.reclaim_ngu(magic=True)  # take all magic from magic NGUs
-        for spell in spells:
-            BloodMagic.cast_spell(spell)
-        Misc.reclaim_bm()
-        NGU.assign_ngu(Misc.get_idle_cap(2), range(1, 7), magic=True)  # magic idle for magic ngu
-
-    continue
 
 zone_after_rebirth = 14
 zone_after_training = 16
@@ -43,8 +28,15 @@ deadline_augmentation = time.strptime("01:45:00", "%H:%M:%S")  # deadline_train_
 deadline_adv_wandoos = time.strptime("02:00:00", "%H:%M:%S")  # deadline_augmentation + datetime.timedelta(minutes=15)
 deadline_wandoos = time.strptime("02:15:00", "%H:%M:%S")  # deadline_adv_wandoos + datetime.timedelta(minutes=15)
 
+#Adventure.snipe(zone=4, duration=60, manual=True, fast=True)  # snipe for macggufin
+#exit(1)
+rt = None
+
 while True:
-    rt = Rebirth.get_rebirth_time()
+    try:
+        rt = Rebirth.get_rebirth_time()
+    except:
+        print("Error in parsing the rebirth time, past rt " + str(rt.days) + " " + str(rt.timestamp))
 
     if rt.days == 0 and rt.timestamp < deadline_before_adv_training:
         # before advance training
@@ -62,6 +54,8 @@ while True:
                 e_idle = Misc.get_idle_cap(1)
                 m_idle = Misc.get_idle_cap(2)
                 print(f"E: {e_idle} \t M: {m_idle}")
+
+            Inventory.loadout(gold_loadout)
         TimeMachine.time_machine(e=Misc.get_idle_cap(1), m=Misc.get_idle_cap(2))  # need to keep adding as filling up
         FightBoss.nuke()
         Adventure.snipe(zone=zone_after_rebirth, duration=1, once=True, bosses=True, manual=False)  # auto to be safe
@@ -73,6 +67,7 @@ while True:
         if curState != stateName:
             print(stateName)
             curState = stateName
+
             if debug:
                 print(f"E: {Misc.get_idle_cap(1)} \t M: {Misc.get_idle_cap(2)}")
                 TimeMachine.time_machine(e=Misc.get_idle_cap(1),
@@ -83,6 +78,8 @@ while True:
                     print(f"E: {Misc.get_idle_cap(1)} \t M: {Misc.get_idle_cap(2)}")
                     Misc.reclaim_all()
                 print(f"E: {Misc.get_idle_cap(1)} \t M: {Misc.get_idle_cap(2)}")
+
+            Inventory.loadout(ngu_loadout)
             # Focus on adv training power and toughness
             AdvancedTraining.advanced_training(value=(Misc.get_idle_cap(1) // 2), ability=1)  # Toughness
             AdvancedTraining.advanced_training(value=Misc.get_idle_cap(1), ability=2)  # Power
@@ -97,6 +94,7 @@ while True:
         if curState != stateName:
             print(stateName)
             curState = stateName
+
             if debug:
                 print(f"E: {Misc.get_idle_cap(1)} \t M: {Misc.get_idle_cap(2)}")
                 TimeMachine.time_machine(e=Misc.get_idle_cap(1),
@@ -107,6 +105,8 @@ while True:
                     print(f"E: {Misc.get_idle_cap(1)} \t M: {Misc.get_idle_cap(2)}")
                     Misc.reclaim_all()
                 print(f"E: {Misc.get_idle_cap(1)} \t M: {Misc.get_idle_cap(2)}")
+
+            Inventory.loadout(gold_loadout)
             # Augmentation
             Augmentation.augments({"CI": 0.7, "ML": 0.3}, Misc.get_idle_cap(1))
             # Blood magic for gold
@@ -121,6 +121,7 @@ while True:
         if curState != stateName:
             print(stateName)
             curState = stateName
+
             if debug:
                 print(f"E: {Misc.get_idle_cap(1)} \t M: {Misc.get_idle_cap(2)}")
                 TimeMachine.time_machine(e=Misc.get_idle_cap(1),
@@ -131,6 +132,8 @@ while True:
                     print(f"E: {Misc.get_idle_cap(1)} \t M: {Misc.get_idle_cap(2)}")
                     Misc.reclaim_all()
                 print(f"E: {Misc.get_idle_cap(1)} \t M: {Misc.get_idle_cap(2)}")
+
+            Inventory.loadout(ngu_loadout)
             # Adv training for wandoos
             AdvancedTraining.advanced_training(value=(Misc.get_idle_cap(1) // 2), ability=4)  # wandoos energy
             AdvancedTraining.advanced_training(value=Misc.get_idle_cap(1), ability=5)  # wandoos magic
@@ -145,6 +148,7 @@ while True:
         if curState != stateName:
             print(stateName)
             curState = stateName
+
             if debug:
                 print(f"E: {Misc.get_idle_cap(1)} \t M: {Misc.get_idle_cap(2)}")
                 TimeMachine.time_machine(e=Misc.get_idle_cap(1),
@@ -155,6 +159,8 @@ while True:
                     print(f"E: {Misc.get_idle_cap(1)} \t M: {Misc.get_idle_cap(2)}")
                     Misc.reclaim_all()
                 print(f"E: {Misc.get_idle_cap(1)} \t M: {Misc.get_idle_cap(2)}")
+
+            Inventory.loadout(ngu_loadout)
             # Wandoos
             Wandoos.wandoos(energy=True, magic=True)
             TimeMachine.time_machine(e=Misc.get_idle_cap(1),
@@ -189,6 +195,7 @@ while True:
         if curState != stateName:
             print(stateName)
             curState = stateName
+
             if debug:
                 print(f"E: {Misc.get_idle_cap(1)} \t M: {Misc.get_idle_cap(2)}")
                 TimeMachine.time_machine(e=Misc.get_idle_cap(1),
@@ -199,8 +206,10 @@ while True:
                     print(f"E: {Misc.get_idle_cap(1)} \t M: {Misc.get_idle_cap(2)}")
                     Misc.reclaim_all()
                 print(f"E: {Misc.get_idle_cap(1)} \t M: {Misc.get_idle_cap(2)}")
+
+            Inventory.loadout(ngu_loadout)
             NGU.assign_ngu(value=Misc.get_idle_cap(1), targets=(list(range(1, 10)) + [5] * 9), magic=False)
-            NGU.assign_ngu(value=Misc.get_idle_cap(2), targets=(list(range(1, 8)) + [1, 2, 5]), magic=True)
+            NGU.assign_ngu(value=Misc.get_idle_cap(2), targets=(list(range(1, 8)) + [1, 2, 5, 7]), magic=True)
             GoldDiggers.deactivate_all_diggers()
             GoldDiggers.gold_diggers([5, 6], deactivate=True)  # Energy NGU, Magic NGU
         #Adventure.snipe(zone=zone_after_training, duration=1, once=True, bosses=True, manual=True)
@@ -211,7 +220,7 @@ while True:
 
     Yggdrasil.ygg()
 
-    # Inventory.boost_equipment(boost_cube=True)
+    Inventory.boost_equipment(boost_cube=True)
     # Inventory.boost_inventory(6)
     Inventory.boost_cube()
 
