@@ -7,7 +7,7 @@ import time
 
 from collections import deque, namedtuple
 from typing      import Dict, List, Tuple
-from PIL         import Image
+from PIL.Image   import Image as PILImage
 
 from deprecated import deprecated
 
@@ -581,8 +581,9 @@ class Inventory:
         """
         Navigation.menu("inventory")
         for slot in coords.EQUIPMENT_SLOTS:
-            if boost_cube and slot == "cube":
-                Inventory.boost_cube()
+            if slot == "cube":
+                if boost_cube:
+                    Inventory.boost_cube()
                 return
             Inputs.click(*coords.EQUIPMENT_SLOTS[slot])
             Inputs.send_string("a")
@@ -1564,7 +1565,7 @@ class Misc:
     
     # crops the misc breakdown image, cutting off empty space on the right
     @staticmethod
-    def __cutoff_right(bmp) -> Image:
+    def __cutoff_right(bmp) -> PILImage:
         first_pix = bmp.getpixel((0, 0))
         width, height = bmp.size
         
@@ -1586,14 +1587,14 @@ class Misc:
     
     # splits the three parts of the resource breakdown (pow, bars, cap)
     @staticmethod
-    def __split_breakdown(bmp) -> List[Image]:
+    def __split_breakdown(bmp) -> List[PILImage]:
         first_pix = bmp.getpixel((0, 0))
         width, height = bmp.size
         y1 = 1
         offset_x = coords.OCR_BREAKDOWN_NUM[0] - coords.OCR_BREAKDOWN_COLONS[0]
         
-        slices = [1, 1, 1]
-        for x in range(0, 3):
+        slices = []
+        for _ in range(0, 3):
             for y in range(y1, height):
                 if not Inputs.rgb_equal(first_pix, bmp.getpixel((0, y))):
                     y0 = y
@@ -1605,7 +1606,7 @@ class Misc:
                     break
             
             slice = bmp.crop((offset_x, y0 - 8, width, y1))
-            slices[x] = Misc.__cutoff_right(slice)
+            slices.append(Misc.__cutoff_right(slice))
         
         return slices
     
