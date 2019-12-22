@@ -1693,9 +1693,6 @@ class Misc:
             if text.find("/") >= 0:
                 text = text.split("/")[0]
 
-            text = text.replace(",", "")  # remove comma separator
-            text = text.replace(".", "")  # comma is recognized as fullstop sometimes
-
             res = Inputs.get_numbers(text)[0]
             return res
             
