@@ -4,6 +4,14 @@ from classes.features   import (AdvancedTraining, Adventure, Augmentation, Fight
                                 BloodMagic, GoldDiggers, NGU, Wandoos, TimeMachine, MoneyPit, Rebirth,
                                 Questing, Yggdrasil)
 from classes.helper     import Helper
+# Challenge needed
+from classes.challenge  import Challenge
+from classes.navigation import Navigation
+import coordinates  as coords
+import usersettings as userset
+from classes.inputs     import Inputs
+from classes.challenges import ngu, basic
+from collections import namedtuple
 
 debug = False
 
@@ -26,8 +34,64 @@ deadline_before_adv_training = time.strptime("00:13:00", "%H:%M:%S")
 deadline_train_power_toughness = time.strptime("01:15:00", "%H:%M:%S")
 deadline_augmentation = time.strptime("01:30:00", "%H:%M:%S")  # deadline_train_power_toughness.tm + datetime.timedelta(minutes=15)
 deadline_adv_wandoos = time.strptime("01:35:00", "%H:%M:%S")  # deadline_augmentation + datetime.timedelta(minutes=15)
-deadline_wandoos = time.strptime("02:00:00", "%H:%M:%S")  # deadline_adv_wandoos + datetime.timedelta(minutes=15)
-deadline_gold = time.strptime("02:45:00", "%H:%M:%S")  # for wear gold drop equip for gold drop from titan
+deadline_wandoos = time.strptime("01:55:00", "%H:%M:%S")  # deadline_adv_wandoos + datetime.timedelta(minutes=15)
+deadline_gold = time.strptime("02:05:00", "%H:%M:%S")  # for wear gold drop equip for gold drop from titan
+
+
+def activate_challenge(challenge_id: int) -> None:
+    # start the challenge
+    Navigation.challenges()
+    x = coords.CHALLENGE.x
+    y = coords.CHALLENGE.y + challenge_id * coords.CHALLENGEOFFSET
+    Inputs.click(x, y)
+    time.sleep(userset.LONG_SLEEP)
+    Navigation.confirm()
+
+
+if False:
+    challenge_id = 3  # remember to amend the call function too
+    challengeTimes = 1
+    for x in range(challengeTimes):
+        print(f"{x}: challenge: {challenge_id}")
+        # running code
+        Challenge.start_challenge(challenge_id)  # no time machine challenge
+
+if False:
+    challenge_id = 3  # remember to amend the call function too
+    challengeClass = basic
+    challengeTimes = 1
+    configTuple = namedtuple('ChallengeConfig', 'times minutes os_level')
+    config = [
+        configTuple(0, 3, 0),
+        configTuple(0, 4, 0),
+        configTuple(0, 5, 0),
+        configTuple(0, 7, 0),
+        configTuple(0, 10, 0),
+        configTuple(0, 12, 1),
+        configTuple(0, 15, 1),
+        configTuple(0, 30, 1),
+        configTuple(4, 60, 2),
+        configTuple(4, 120, 2),
+    ]
+    for x in range(challengeTimes):
+        print(f"{x} out of {challengeTimes}: challenge: {challenge_id}")
+        activate_challenge(challenge_id)
+        for t in config:
+            for y in range(t.times):
+                print(f"{y} out of {t.times}, Minutes: {t.minutes}, Wandoos: {t.os_level}")
+                Wandoos.set_wandoos(t.os_level)
+                challengeClass.speedrun(t.minutes)
+                try:
+                    current_boss = int(FightBoss.get_current_boss())
+                except ValueError:
+                    current_boss = 1
+                    print("couldn't get current boss")
+                print(f"Current Boss: {current_boss}")
+                if not Rebirth.check_challenge():
+                    break
+            if not Rebirth.check_challenge():
+                break
+
 
 #Adventure.snipe(zone=4, duration=60, manual=True, fast=True)  # snipe for macggufin
 #exit(1)
