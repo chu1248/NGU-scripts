@@ -14,13 +14,14 @@ from classes.challenges import ngu, basic
 from collections import namedtuple
 
 debug = False
+farmCurrentZoneOnly = False
 
 # Set these to your own loadouts
 ngu_loadout = 1
 gold_loadout = 2
 pit_loadout = 3
 
-blood_magic_highest_affordable_level = 6  # 0 based
+blood_magic_highest_affordable_level = 7  # 0 basedb
 
 
 Helper.init()
@@ -28,15 +29,15 @@ Helper.requirements()
 
 curState = ""
 
-zone_after_rebirth = 16  # Beardverse
-zone_after_training = 18  # badly drawn world
+zone_after_rebirth = 19  # Boring ass world
+zone_after_training = 19  # Boring ass world
 deadline_before_adv_training = time.strptime("00:13:00", "%H:%M:%S")
 deadline_train_power_toughness = time.strptime("01:15:00", "%H:%M:%S")
 deadline_augmentation = time.strptime("01:30:00", "%H:%M:%S")  # deadline_train_power_toughness.tm + datetime.timedelta(minutes=15)
 deadline_adv_wandoos = time.strptime("01:35:00", "%H:%M:%S")  # deadline_augmentation + datetime.timedelta(minutes=15)
 deadline_wandoos = time.strptime("01:55:00", "%H:%M:%S")  # deadline_adv_wandoos + datetime.timedelta(minutes=15)
 deadline_gold = time.strptime("02:05:00", "%H:%M:%S")  # for wear gold drop equip for gold drop from titan
-
+4
 
 def activate_challenge(challenge_id: int) -> None:
     # start the challenge
@@ -97,7 +98,14 @@ if False:
 #exit(1)
 rt = None
 
+if farmCurrentZoneOnly:
+    print("Farm Adventure zone only")
 while True:
+    if farmCurrentZoneOnly:
+        # only farm in current zone
+        Adventure.snipe(zone=0, duration=30)
+        Navigation.menu('inventory')
+        continue
     try:
         rt = Rebirth.get_rebirth_time()
     except:
@@ -146,7 +154,7 @@ while True:
                         Misc.reclaim_all()
                     print(f"E: {Misc.get_idle_cap(1)} \t M: {Misc.get_idle_cap(2)}")
 
-                Inventory.loadout(ngu_loadout)
+                Inventory.loadout(gold_loadout)
             if Misc.get_idle_cap(1) > 0 or Misc.get_idle_cap(2) > 0:
                 # Focus on adv training power and toughness
                 AdvancedTraining.advanced_training(energy=(Misc.get_idle_cap(1) // 2), ability=1)  # Toughness
@@ -175,6 +183,8 @@ while True:
                     print(f"E: {Misc.get_idle_cap(1)} \t M: {Misc.get_idle_cap(2)}")
 
                 Inventory.loadout(gold_loadout)
+                GoldDiggers.deactivate_all_diggers()
+                GoldDiggers.gold_diggers(targets=[11])  # blood
 
             if Misc.get_idle_cap(1) > 0 or Misc.get_idle_cap(2) > 0:
                 # Augmentation
@@ -203,6 +213,9 @@ while True:
                     print(f"E: {Misc.get_idle_cap(1)} \t M: {Misc.get_idle_cap(2)}")
 
                 Inventory.loadout(ngu_loadout)
+                GoldDiggers.deactivate_all_diggers()
+                GoldDiggers.gold_diggers(targets=[11])  # blood
+
             if Misc.get_idle_cap(1) > 0 or Misc.get_idle_cap(2) > 0:
                 # Adv training for wandoos
                 AdvancedTraining.advanced_training(energy=(Misc.get_idle_cap(1) // 2), ability=4)  # wandoos energy
@@ -232,7 +245,7 @@ while True:
 
                 Inventory.loadout(ngu_loadout)
                 GoldDiggers.deactivate_all_diggers()
-                GoldDiggers.gold_diggers(targets=[2])  # wandoos
+                GoldDiggers.gold_diggers(targets=[2, 11])  # wandoos, blood
 
             if Misc.get_idle_cap(1) > 0 or Misc.get_idle_cap(2) > 0:
                 # Wandoos
@@ -266,7 +279,7 @@ while True:
 
                 Inventory.loadout(gold_loadout)
                 GoldDiggers.deactivate_all_diggers()
-                GoldDiggers.gold_diggers(targets=[4, 1], deactivate=True)  # add adv stats
+                GoldDiggers.gold_diggers(targets=[4, 1, 9, 10, 12], deactivate=True)  # add adv stats, drop, pp, day care, exp
             if Misc.get_idle_cap(1) > 0 or Misc.get_idle_cap(2) > 0:
                 TimeMachine.time_machine(e=Misc.get_idle_cap(1),
                                          m=Misc.get_idle_cap(2))  # need to keep adding as filling up
@@ -288,7 +301,8 @@ while True:
                 MoneyPit.spin()
                 MoneyPit.pit()
 
-                Rebirth.do_rebirth()
+                # Rebirth.do_rebirth()
+                activate_challenge(8)
                 time.sleep(3)
         else:
             # >=2hr < 1D
@@ -311,7 +325,7 @@ while True:
                 Inventory.loadout(ngu_loadout)
                 #Inventory.loadout(gold_loadout)
                 GoldDiggers.deactivate_all_diggers()
-                GoldDiggers.gold_diggers([5, 6, 4, 1], deactivate=True)  # Energy NGU, Magic NGU, Adventure Stat, drop
+                GoldDiggers.gold_diggers([5, 6, 4, 1, 9, 12], deactivate=True)  # Energy NGU, Magic NGU, Adventure Stat, drop, pp, exp
             if Misc.get_idle_cap(1) > 20:
                 NGU.assign_ngu(value=Misc.get_idle_cap(1), targets=(list(range(1, 10)) + [5] * 9), magic=False)
             if Misc.get_idle_cap(2) > 20:
@@ -331,12 +345,21 @@ while True:
         # Inventory.boost_inventory(6)
         Inventory.boost_cube()
 
+        Questing.questing(subcontract=True)
+
         spells = BloodMagic.check_spells_ready()
         if spells:  # check if any spells are off CD
             Misc.reclaim_res(magic=True)
             for spell in spells:
                 BloodMagic.cast_spell(spell)
             curState = ""  # let the loop reassign the stuff
+
+        if Inputs.check_pixel_color(*coords.IS_PIT_READY):
+            print("Feed money pit")
+            GoldDiggers.level_diggers()
+            MoneyPit.pit()
+
+        Misc.save_check()
     except Exception as e:
         print(e)
         time.sleep(1)
