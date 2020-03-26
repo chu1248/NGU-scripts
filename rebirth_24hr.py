@@ -23,6 +23,10 @@ pit_loadout = 3
 
 blood_magic_highest_affordable_level = 7  # 0 basedb
 
+ngu_energy_targets = (list(range(1, 10)) + [5] * 9)
+ngu_magic_targets = (list(range(1, 8)) + [5] + [7] * 7)
+
+
 
 Helper.init()
 Helper.requirements()
@@ -37,7 +41,7 @@ deadline_augmentation = time.strptime("01:30:00", "%H:%M:%S")  # deadline_train_
 deadline_adv_wandoos = time.strptime("01:35:00", "%H:%M:%S")  # deadline_augmentation + datetime.timedelta(minutes=15)
 deadline_wandoos = time.strptime("01:55:00", "%H:%M:%S")  # deadline_adv_wandoos + datetime.timedelta(minutes=15)
 deadline_gold = time.strptime("02:05:00", "%H:%M:%S")  # for wear gold drop equip for gold drop from titan
-4
+
 
 def activate_challenge(challenge_id: int) -> None:
     # start the challenge
@@ -192,6 +196,9 @@ while True:
                 # Blood magic for gold
                 BloodMagic.toggle_auto_spells(number=False, drop=False, gold=True)
                 BloodMagic.blood_magic_reverse(blood_magic_highest_affordable_level)
+                # in case of excess
+                TimeMachine.time_machine(e=Misc.get_idle_cap(1),
+                                         m=Misc.get_idle_cap(2))
             Adventure.snipe(zone=zone_after_training, duration=1, once=True, bosses=True, manual=True)
             Adventure.itopod_snipe(60)
 
@@ -223,6 +230,9 @@ while True:
                 # Blood magic for drop
                 BloodMagic.toggle_auto_spells(number=False, drop=True, gold=False)
                 BloodMagic.blood_magic_reverse(blood_magic_highest_affordable_level)
+                # in case of excess
+                TimeMachine.time_machine(e=Misc.get_idle_cap(1),
+                                         m=Misc.get_idle_cap(2))
             # enemies
             Adventure.itopod_snipe(60)
 
@@ -301,8 +311,8 @@ while True:
                 MoneyPit.spin()
                 MoneyPit.pit()
 
-                # Rebirth.do_rebirth()
-                activate_challenge(8)
+                Rebirth.do_rebirth()
+                # activate_challenge(8)
                 time.sleep(3)
         else:
             # >=2hr < 1D
@@ -327,9 +337,11 @@ while True:
                 GoldDiggers.deactivate_all_diggers()
                 GoldDiggers.gold_diggers([5, 6, 4, 1, 9, 12], deactivate=True)  # Energy NGU, Magic NGU, Adventure Stat, drop, pp, exp
             if Misc.get_idle_cap(1) > 20:
-                NGU.assign_ngu(value=Misc.get_idle_cap(1), targets=(list(range(1, 10)) + [5] * 9), magic=False)
+                #NGU.assign_ngu(value=Misc.get_idle_cap(1), targets=ngu_energy_targets, magic=False)
+                NGU.cap_ngu(targets=None, magic=False, cap_all=True)
             if Misc.get_idle_cap(2) > 20:
-                NGU.assign_ngu(value=Misc.get_idle_cap(2), targets=(list(range(1, 8)) + [5] + [7] * 7), magic=True)
+                #NGU.assign_ngu(value=Misc.get_idle_cap(2), targets=ngu_magic_targets, magic=True)
+                NGU.cap_ngu(targets=None, magic=True, cap_all=True)
             #Adventure.snipe(zone=zone_after_training, duration=1, once=True, bosses=True, manual=True)
             Adventure.itopod_snipe(60)
             #Adventure.snipe(zone=19, duration=1, once=False, bosses=True, manual=True)
@@ -358,6 +370,7 @@ while True:
             print("Feed money pit")
             GoldDiggers.level_diggers()
             MoneyPit.pit()
+            print(stateName)
 
         Misc.save_check()
     except Exception as e:
