@@ -2,7 +2,7 @@ import time
 # Helper classes
 from classes.features   import (AdvancedTraining, Adventure, Augmentation, FightBoss, Inventory, Misc,
                                 BloodMagic, GoldDiggers, NGU, Wandoos, TimeMachine, MoneyPit, Rebirth,
-                                Questing, Yggdrasil)
+                                Questing, Yggdrasil, Hacks)
 from classes.helper     import Helper
 # Challenge needed
 from classes.challenge  import Challenge
@@ -10,7 +10,7 @@ from classes.navigation import Navigation
 import coordinates  as coords
 import usersettings as userset
 from classes.inputs     import Inputs
-from classes.challenges import ngu, basic
+from classes.challenges import ngu, basic, timemachine, level, blind
 from collections import namedtuple
 
 debug = False
@@ -25,6 +25,7 @@ blood_magic_highest_affordable_level = 7  # 0 basedb
 
 ngu_energy_targets = (list(range(1, 10)) + [5] * 9)
 ngu_magic_targets = (list(range(1, 8)) + [5] + [7] * 7)
+hacks_targets = (list(range(1, 8)) + [2] * 7)
 
 Helper.init()
 Helper.requirements()
@@ -52,38 +53,46 @@ def activate_challenge(challenge_id: int) -> None:
 
 
 if False:
-    challenge_id = 3  # remember to amend the call function too
-    challengeTimes = 1
+    # using default speed runs
+    challenge_id = 7  # remember to amend the call function too
+    challengeTimes = 10
+
     for x in range(challengeTimes):
         print(f"{x}: challenge: {challenge_id}")
         # running code
         Challenge.start_challenge(challenge_id)  # no time machine challenge
 
-if False:
-    challenge_id = 3  # remember to amend the call function too
-    challengeClass = basic
-    challengeTimes = 1
+# 20200531 first 3 min rebirth boss 52... 2nd rebirth at 70...
+# 20200601 3 min 55,73...
+if True:
+    # customize speed run length
+    challenge_id = 11  # remember to amend the call function too
+    challengeClass = timemachine
+    challengeTimes = 10
+
     configTuple = namedtuple('ChallengeConfig', 'times minutes os_level')
     config = [
-        configTuple(0, 3, 0),
-        configTuple(0, 4, 0),
-        configTuple(0, 5, 0),
-        configTuple(0, 7, 0),
-        configTuple(0, 10, 0),
-        configTuple(0, 12, 1),
-        configTuple(0, 15, 1),
-        configTuple(0, 30, 1),
-        configTuple(4, 60, 2),
-        configTuple(4, 120, 2),
+        configTuple(4, 3, 0),
+        configTuple(1, 4, 0),
+        configTuple(1, 5, 0),
+        configTuple(1, 7, 0),
+        configTuple(1, 10, 0),
+        configTuple(1, 12, 0),
+        configTuple(1, 15, 0),
+        configTuple(2, 30, 0),
+        configTuple(2, 30, 1),
+        configTuple(4, 60, 1),
+        configTuple(4, 120, 1),
     ]
     for x in range(challengeTimes):
-        print(f"{x} out of {challengeTimes}: challenge: {challenge_id}")
+        print(f"{x+1} out of {challengeTimes}: challenge: {challenge_id}")
         activate_challenge(challenge_id)
         for t in config:
             for y in range(t.times):
-                print(f"{y} out of {t.times}, Minutes: {t.minutes}, Wandoos: {t.os_level}")
+                print(f"{y+1} out of {t.times}, Minutes: {t.minutes}, Wandoos: {t.os_level}")
                 Wandoos.set_wandoos(t.os_level)
                 challengeClass.speedrun(t.minutes)
+                #challengeClass.run(t.minutes)
                 try:
                     current_boss = int(FightBoss.get_current_boss())
                 except ValueError:
@@ -190,7 +199,7 @@ while True:
 
             if Misc.get_idle_cap(1) > 0 or Misc.get_idle_cap(2) > 0:
                 # Augmentation
-                Augmentation.augments({"CI": 0.34, "ML": 0.66}, Misc.get_idle_cap(1))
+                Augmentation.augments({"MI": 0.34, "DTMT": 0.66}, Misc.get_idle_cap(1))
                 # Blood magic for gold
                 BloodMagic.toggle_auto_spells(number=False, drop=False, gold=True)
                 BloodMagic.blood_magic_reverse(blood_magic_highest_affordable_level)
@@ -340,6 +349,8 @@ while True:
             if Misc.get_idle_cap(2) > 20:
                 NGU.assign_ngu(value=Misc.get_idle_cap(2), targets=ngu_magic_targets, magic=True)
                 #NGU.cap_ngu(targets=None, magic=True, cap_all=True)
+            if Misc.get_idle_cap(3) > 0:
+                Hacks.hacks(hacks_targets, Misc.get_idle_cap(3))
             #Adventure.snipe(zone=zone_after_training, duration=1, once=True, bosses=True, manual=True)
             Adventure.itopod_snipe(60)
             #Adventure.snipe(zone=19, duration=1, once=False, bosses=True, manual=True)
@@ -351,11 +362,15 @@ while True:
         Yggdrasil.ygg()
 
         Inventory.merge_inventory(slots=6)
+        Inventory.merge_equipment()
         Inventory.boost_equipment(boost_cube=True)
         # Inventory.boost_inventory(6)
         Inventory.boost_cube()
 
         Questing.questing(subcontract=True)
+
+        if Misc.get_idle_cap(3) > 0:
+            Hacks.hacks(hacks_targets, Misc.get_idle_cap(3))
 
         spells = BloodMagic.check_spells_ready()
         if spells:  # check if any spells are off CD
