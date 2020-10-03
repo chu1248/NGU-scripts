@@ -98,6 +98,7 @@ ABILITY_PRIORITY = {1: 4,  # Strong
                     10: 45 + 900,  # ultimate buff
                     11: 15 + 1000,  # Paralyze
                     12: 35,  # Hyper Regen
+                    14: 50 + 99999,  # Mega Buff
                     }
 
 # TITAN DICTIONARIES
@@ -163,16 +164,31 @@ FIGHT = Pixel(620, 275)
 FIGHT_STOP = Pixel(625, 165)
 
 # INVENTORY OFFSETS
-EQUIPMENT_SLOTS = {"accessory1": Pixel(480, 65),
-                   "accessory2": Pixel(480, 115),
-                   "accessory3": Pixel(480, 165),
-                   "accessory4": Pixel(480, 215),
-                   "head": Pixel(525, 65),
-                   "chest": Pixel(525, 115),
-                   "legs": Pixel(525, 165),
-                   "boots": Pixel(525, 210),
-                   "weapon": Pixel(575, 115),
-                   "cube": Pixel(625, 115)}
+EQUIPMENT_SLOTS = {
+    "weapon": Pixel(575, 115),
+    "weapon2": Pixel(575, 165),
+    "head": Pixel(525, 65),
+    "chest": Pixel(525, 115),
+    "legs": Pixel(525, 165),
+    "boots": Pixel(525, 210),
+    "accessory1": Pixel(475, 65),
+    "accessory2": Pixel(475, 115),
+    "accessory3": Pixel(475, 165),
+    "accessory4": Pixel(475, 215),
+#    "accessory5": Pixel(425, 65),
+#    "accessory6": Pixel(425, 115),
+#    "accessory7": Pixel(425, 165),
+#    "accessory8": Pixel(425, 215),
+#    "accessory9": Pixel(375, 65),
+#    "accessory10": Pixel(375, 115),
+#    "accessory11": Pixel(375, 165),
+#    "accessory12": Pixel(375, 215),
+#    "accessory13": Pixel(325, 65),
+#    "accessory14": Pixel(325, 115),
+#    "accessory15": Pixel(325, 165),
+#    "accessory16": Pixel(325, 215),
+    "cube": Pixel(625, 115)
+}
 LOADOUT_Y = 255
 LOADOUT = {1: Pixel(330, LOADOUT_Y), 2: Pixel(360, LOADOUT_Y), 3: Pixel(390, LOADOUT_Y), 4: Pixel(420, LOADOUT_Y), 5: Pixel(450, LOADOUT_Y),
            6: Pixel(480, LOADOUT_Y), 7: Pixel(510, LOADOUT_Y), 8: Pixel(540, LOADOUT_Y), 9: Pixel(570, LOADOUT_Y), 10: Pixel(600, LOADOUT_Y)}
@@ -497,7 +513,7 @@ WISH_PORTRAIT = Pixel(353, 317)
 WISH_SELECTION = Pixel(313, 278)
 WISH_SELECTION_OFFSET = Pixel(92, 106)
 WISH_CLEAR_WISH = Pixel(800, 112)
-WISH_E_ADD = Pixel(590, 220)
-WISH_M_ADD = Pixel(720, 220)
-WISH_R_ADD = Pixel(860, 220)
+WISH_E_ADD = Pixel(609, 222)
+WISH_M_ADD = Pixel(738, 222)
+WISH_R_ADD = Pixel(867, 222)
 OCR_WISH_SLOTS = OCRBox(708, 120, 755, 135)
