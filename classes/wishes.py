@@ -17,7 +17,7 @@ import usersettings as userset
 class Wishes:
     """Class that handles wishes."""
 
-    def __init__(self, wish_slots, wish_min_time):
+    def __init__(self, wish_slots, wish_min_time, resources_ratio=1.0):
         """Fetch initial breakdown values."""
         print(const.WISH_DISCLAIMER)
 
@@ -34,11 +34,11 @@ class Wishes:
         self.wishes_completed = []  # completed wishes
         self.wishes_in_progress = []  # wishes above level 0
         self.wishes_active = []  # wishes that currently are progressing
-        self.get_breakdowns()
+        self.get_breakdowns(resources_ratio)
         self.get_wish_status()
         # self.allocate_wishes()
 
-    def get_breakdowns(self):
+    def get_breakdowns(self, resources_ratio):
         """Go to stat breakdowns and fetch the necessary stats."""
         Navigation.stat_breakdown()
         Inputs.click(*coords.BREAKDOWN_E)
@@ -102,13 +102,13 @@ class Wishes:
             print("Couldn't get rpow")
             self.rpow = 1
 
-        self.get_caps()
+        self.get_caps(resources_ratio)
 
-    def get_caps(self):
+    def get_caps(self, ratio):
         """Get all available idle resources."""
-        self.ecap = Misc.get_idle_cap(1)
-        self.mcap = Misc.get_idle_cap(2)
-        self.rcap = Misc.get_idle_cap(3)
+        self.ecap = Misc.get_idle_cap(1) * ratio
+        self.mcap = Misc.get_idle_cap(2) * ratio
+        self.rcap = Misc.get_idle_cap(3) * ratio
 
     def fix_text(self, text):
         """Fix OCR output to something useable."""
