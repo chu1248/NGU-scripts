@@ -144,7 +144,7 @@ def update_gamestate():
     global current_boss, minutes_elapsed, advanced_training_locked, bm_locked, tm_locked
 
     rb_time = Rebirth.get_rebirth_time()
-    minutes_elapsed = int(rb_time.timestamp.tm_min)
+    minutes_elapsed = int(rb_time.timestamp.tm_min) + int(rb_time.timestamp.tm_hour) * 60
     try:
         current_boss = int(FightBoss.get_current_boss())
     except ValueError:
