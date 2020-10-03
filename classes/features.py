@@ -482,7 +482,7 @@ class Adventure:
                 queue.append(12)
             elif 7 in ready:
                 queue.append(7)
-        
+
         # check if offensive buff and ultimate buff are both ready
 #        buffs = [8, 10]
 #        if 14 in ready:
@@ -978,6 +978,8 @@ class NGU:
         targets -- Array of NGU's to use (1-9).
         magic -- Set to true if these are magic NGUs
         """
+        if len(targets) == 0:
+            return
         if max(list(targets)) > (7 if magic else 9):
             raise RuntimeError("Passing invalid choice to assign_ngu," +
                                " allowed options: 1.." + str(7 if magic else 9) +
@@ -1191,9 +1193,10 @@ class Questing:
                     Inputs.send_string("d")
                     Inputs.ctrl_click(*loc)
                 time.sleep(3)  # Need to wait for tooltip to disappear after consuming
-    
+
+    # return whether have work done
     @staticmethod
-    def questing(duration :int =30, major :bool =False, subcontract :bool =False, force :int =0, adv_duration :int =2, butter :bool =False) -> None:
+    def questing(duration :int =30, major :bool =False, subcontract :bool =False, force :int =0, adv_duration :int =2, butter :bool =False) -> bool:
         """Procedure for questing.
         
         ===== IMPORTANT =====
@@ -1273,16 +1276,17 @@ class Questing:
         if subcontract:
             if Inputs.check_pixel_color(*coords.QUESTING_IDLE_INACTIVE):
                 Inputs.click(*coords.QUESTING_SUBCONTRACT)
-            return
+            return False
         
         if major and coords.QUESTING_MINOR_QUEST in text.lower():  # check if current quest is minor
             if Inputs.check_pixel_color(*coords.QUESTING_IDLE_INACTIVE):
                 Inputs.click(*coords.QUESTING_SUBCONTRACT)
-            return
+            return False
         
         if not Inputs.check_pixel_color(*coords.QUESTING_IDLE_INACTIVE):  # turn off idle
             Inputs.click(*coords.QUESTING_SUBCONTRACT)
         if butter:
+            print("Use butter")
             Inputs.click(*coords.QUESTING_BUTTER)
         for count, zone in enumerate(coords.QUESTING_ZONES, start=0):
             if zone in text.lower():
@@ -1292,7 +1296,7 @@ class Questing:
                         adv_duration = (end - current_time) / 60
                         if adv_duration < 0.5:
                             adv_duration = 0
-                            return
+                            return True
                     Adventure.snipe(count, adv_duration)
                     Inventory.boost_cube()
                     Questing.questing_consume_items()
@@ -1315,7 +1319,8 @@ class Questing:
                         gained_qp = current_qp - start_qp
                         print(f"Completed quest in zone #{count} at {datetime.datetime.now().strftime('%H:%M:%S')} for {gained_qp} QP")
                         
-                        return
+                        return True
+        return True
     
     @staticmethod
     def get_use_majors() -> bool:
